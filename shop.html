@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My shopping</title>
+</head>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .container {
+        display: flex;
+        justify-content: center;
+        margin: 30px;
+    }
+    
+    table {
+        padding: 10px 15px;
+        width: 60%;
+        height: 200px;
+        text-align: left;
+        border-collapse: collapse;
+        border: 1px solid #04aa6d;
+    }
+    
+    table th {
+        background-color: black;
+    }
+    
+    table td,
+    th {
+        padding: 10px 15px;
+        /* border: 1px solid blsack; */
+        color: grey;
+    }
+    
+    table tr:nth-child(even) {
+        background-color: #eeeeee40;
+    }
+    
+    table tr:hover {
+        background-color: #eeeeee99;
+    }
+    
+    .apiimg {
+        width: 70px;
+    }
+    
+    .card {
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+    }
+    
+    .cbody {
+        width: 60%;
+        height: 100px;
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+        box-shadow: 1px 1px 10px #4a4a4a30;
+    }
+    
+    .cbody img {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .info {
+        padding-left: 50px;
+    }
+</style>
+
+<body>
+    <div class="card" id="card">
+
+    </div>
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th> Name</th>
+                    <th>Id</th>
+                    <th>Price</th>
+                    <th>Rating</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody id="page">
+
+
+            </tbody>
+
+        </table>
+    </div>
+</body>
+<script>
+    let card = document.getElementById("card");
+    let page = document.getElementById("page");
+    // let list;//variable ma tat mht htr tr kyouk tu ka undefined fik tl -->
+    let list = ""; ///empty string fik tr kyouk pyay lal twr tl
+    card.style.display = "none";
+
+    //ajax,fetch,async await
+    //fetch('https://fakestoreapi.com/products/1')
+    // .then(res => res.json())
+    //  .then(json => console.log(json)) 
+    //.then=server bat ka pr lr kht yin
+
+    // fetch("https://fakestoreapi.com/products").then((response) => {
+    //        console.log(response);
+    //  })
+    // .catch((error) => {
+    //     console.log(error); //error lr yin error htoke pay tr
+    // })
+    //fetch nat khw tr
+    //fetch("https://fakestoreapi.com/products").then((response) =>
+    //    response.json()
+    // ).then((result) => {
+    //     let data;
+    //   data = result;
+    //   console.log(data);
+    // });
+
+
+    fetch("https://fakestoreapi.com/products")
+        .then((response) => response.json())
+        .then((result) => {
+            // page.innerHTML = `<img src="${result[2].image}"/>` 
+            for (let i = 0; i < result.length; i++) { //<= tone lox ma ya woo // i ko 1 ka sa ml so shake ta pone ma pr woo array ka 0 ka sa tl
+                // list += `<img src="${result[i].image}"/>` //+so tr htake mha override ma fik pl hwt lr tl -->
+                list += ` <tr onclick="detail(${result[i].id})">
+                <td>${result[i].id}</td>
+                <td>${result[i].title}</td>
+                <td>${result[i].price}$</td>
+                <td>${result[i].rating.rate}</td>
+              <td>  <a href="${result[i].image}" target="_blink"><img src="${result[i].image}" class="apiimg" alt=""></a></td>
+            </tr>`
+            }
+            page.innerHTML = list;
+        });
+
+
+
+
+    function detail(id) {
+        fetch("https://fakestoreapi.com/products/" + id)
+            .then((response) => response.json())
+            .then((data) => {
+                card.innerHTML = `
+                <div class="cbody">
+                    <img src="${data.image}" alt="">
+                    <div class="info">
+                        <h4>${data.title}</h4>
+                        <h4>${data.price}</h4>
+                        <h4>${data.rating.rate}</h4>
+                    </div>
+                </div>
+                `;
+                card.style.display = "block";
+            }); //tu nat sai tat hr ko pya tl
+
+    }
+
+
+
+
+    //async await fetch//data   htake mat container ta ku lo tl
+    //api call lr yin so p wait ny tr await ka
+    // let callApi = async() => {
+    //  let response = await fetch("https://fakestoreapi.com/products", { //,nout ka hr tw ko pyoke yay lal ya tl
+    //     method: "GET",
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //     },
+    //  });
+    //  let jsonResponse = await response.json();
+    //  console.log(jsonResponse);
+
+    //  };
+    //  callApi();
+</script>
+
+</html>
